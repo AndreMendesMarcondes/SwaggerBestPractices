@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\SBP.Data\SBP.Data.csproj" />
 	  <ProjectReference Include="..\SBP.Domain\SBP.Domain.csproj" />
 	</ItemGroup>
 

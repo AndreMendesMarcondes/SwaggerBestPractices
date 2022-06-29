@@ -1,11 +1,13 @@
 using Microsoft.OpenApi.Models;
-using System.Reflection;
+using SBP.Data;
+using SBP.Domain.Interface.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+#region [Swagger]
 builder.Services.AddSwaggerGen(options =>
 {
     options.EnableAnnotations();
@@ -27,6 +29,9 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+#endregion
+
+builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
 
 var app = builder.Build();
 

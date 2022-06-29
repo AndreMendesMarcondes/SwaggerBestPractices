@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SBP.Domain;
+﻿using SBP.Domain;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using SBP.Domain.DTO.Student;
+using SBP.Domain.Interface.Repository;
 
 namespace SBP.API.Controllers
 {
@@ -9,42 +11,51 @@ namespace SBP.API.Controllers
     [Produces("application/json")]
     public class StudentController : ControllerBase
     {
+        private readonly IStudentRepository _repository;
+
+        public StudentController(IStudentRepository repository)
+        {
+            _repository = repository;
+        }
+
         [HttpGet]
         [SwaggerOperation(Summary = "Busca os estudantes cadastrados",
                           Description = "Busca os estudantes cadastrados",
-                          OperationId = "GET",                         
+                          OperationId = "Get",
                           Tags = null)]
-        [ProducesResponseType(typeof(List<Student>), 200)]
-        [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
+        [ProducesResponseType(typeof(List<StudentDTO>), 200)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_repository.GetAll());
         }
 
-        // GET api/<StudentController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [SwaggerOperation(Summary = "Busca um estudante",
+                          Description = "Busca um estudante por ID",
+                          OperationId = "GetById",
+                          Tags = null)]
+        [ProducesResponseType(typeof(StudentDTO), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public IActionResult Get(int id)
         {
-            return "value";
+            return Ok(_repository.GetById(id));
         }
 
-        // POST api/<StudentController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [SwaggerOperation(Summary = "Insere um novo estudante",
+                        Description = "Insere um novo estudante",
+                        OperationId = "Insert",
+                        Tags = null)]
+        [ProducesResponseType(typeof(Student), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public IActionResult Post(StudentDTO studentDTO)
         {
-        }
-
-        // PUT api/<StudentController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<StudentController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return StatusCode(201, _repository.Insert(studentDTO));
         }
     }
 }
