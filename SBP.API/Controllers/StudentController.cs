@@ -1,12 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SBP.Domain;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SBP.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Produces("application/json")]
     public class StudentController : ControllerBase
     {
         [HttpGet]
+        [SwaggerOperation(Summary = "Busca os estudantes cadastrados",
+                          Description = "Busca os estudantes cadastrados",
+                          OperationId = "GET",                         
+                          Tags = null)]
+        [ProducesResponseType(typeof(List<Student>), 200)]
+        [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
+        [ProducesResponseType(500)]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
